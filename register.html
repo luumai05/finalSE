@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaigonRide - Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-page">
+
+<div class="login-container">
+    <div class="login-header">
+        <div class="logo-circle">🚲</div>
+        <h1>SaigonRide</h1>
+        <p class="subtitle">Create your account</p>
+    </div>
+
+    <div class="card login-card">
+        <div class="card-header">
+            <h2 class="card-title">Register</h2>
+            <p class="card-description">Fill your information</p>
+        </div>
+
+        <div class="card-content">
+            <form id="registerForm">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload CCCD (ID Card)</label>
+                    <input type="file" id="cccd" accept="image/*" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    Register
+                </button>
+
+                <p style="margin-top:10px; text-align:center;">
+                    Already have account? <a href="index.html">Login</a>
+                </p>
+
+                <div id="errorMessage" class="error-message" style="display:none;"></div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById("registerForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const phone = document.getElementById("phone").value;
+
+    const res = await fetch("https://localhost:7065/api/auth/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: name,
+            email: email,
+            password: password,
+            phone: phone
+        })
+    });
+
+    if (!res.ok) {
+        document.getElementById("errorMessage").textContent = "Register failed";
+        document.getElementById("errorMessage").style.display = "block";
+        return;
+    }
+
+    alert("Register success! Please login.");
+    window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>

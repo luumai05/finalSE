@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaigonRide - New Rental</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="rental.html" class="nav-logo">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="5.5" cy="17.5" r="3.5"/>
+                    <circle cx="18.5" cy="17.5" r="3.5"/>
+                    <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+                </svg>
+                <span>SaigonRide</span>
+            </a>
+
+            <div class="nav-desktop">
+                <a href="rental.html" class="nav-link active">New Rental</a>
+                <a href="dashboard.html" class="nav-link nav-dashboard">Dashboard</a>
+                <div class="nav-user">
+                    <span id="userName"></span>
+                    <span id="userRole"></span>
+                    <button onclick="logout()" class="btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button class="nav-mobile-toggle" onclick="toggleMobileMenu()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+        </div>
+
+        <div id="mobileMenu" class="nav-mobile">
+            <a href="rental.html" class="nav-link active">New Rental</a>
+            <a href="dashboard.html" class="nav-link nav-dashboard">Dashboard</a>
+            <div class="nav-mobile-user">
+                <span id="userName2"></span>
+                <button onclick="logout()" class="btn btn-secondary btn-sm">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container-md">
+            <!-- Header -->
+            <div class="page-header">
+                <h1>Create New Rental</h1>
+                <p>Select your vehicle and stations to get started</p>
+            </div>
+
+            <!-- Vehicle Type Selection -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Select Vehicle Type</h2>
+                    <p class="card-description">Choose between a standard bike or an electric scooter</p>
+                </div>
+                <div class="card-content">
+                    <div class="vehicle-grid">
+                        <button class="vehicle-card active" id="bikeCard" onclick="selectVehicle('bike')">
+                            <div class="vehicle-icon bike-icon-color">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="5.5" cy="17.5" r="3.5"/>
+                                    <circle cx="18.5" cy="17.5" r="3.5"/>
+                                    <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                    <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+                                </svg>
+                            </div>
+                            <h3>Standard Bike</h3>
+                            <p class="vehicle-price">500 VND/min</p>
+                            <span class="badge badge-success">Eco-Friendly</span>
+                        </button>
+
+                        <button class="vehicle-card" id="scooterCard" onclick="selectVehicle('scooter')">
+                            <div class="vehicle-icon scooter-icon-color">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                            </div>
+                            <h3>E-Scooter</h3>
+                            <p class="vehicle-price">1,500 VND/min</p>
+                            <span class="badge badge-info">Fast & Electric</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Station Selection -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Select Stations</h2>
+                    <p class="card-description">Choose where you'll pick up and return the vehicle</p>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label>Start Station</label>
+                        <select id="startStation" onchange="updateRental()">
+                            <option value="">Select start station</option>
+                        </select>
+                        <p id="startStationAddress" class="station-address"></p>
+                    </div>
+
+                    <div class="station-arrow">→</div>
+
+                    <div class="form-group">
+                        <label>Return Station</label>
+                        <select id="returnStation" onchange="updateRental()">
+                            <option value="">Select return station</option>
+                        </select>
+                        <p id="returnStationAddress" class="station-address"></p>
+                        <p id="returnStationDiscount" class="discount-message" style="display: none;">
+                            💰 15% discount for returning to low inventory station!
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Estimated Duration</label>
+                        <select id="duration" onchange="updateRental()">
+                            <option value="15">15 minutes</option>
+                            <option value="30" selected>30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Summary -->
+            <div id="priceSummary" class="card price-summary" style="display: none;">
+                <div class="card-header">
+                    <h2 class="card-title">Price Summary</h2>
+                </div>
+                <div class="card-content">
+                    <div class="price-row">
+                        <span id="basePriceLabel">Base Price</span>
+                        <span id="basePrice">0 VND</span>
+                    </div>
+                    <div id="discountRow" class="price-row discount-row" style="display: none;">
+                        <span>Low Inventory Discount (15%)</span>
+                        <span id="discount">0 VND</span>
+                    </div>
+                    <div class="price-row price-total">
+                        <span>Total Price</span>
+                        <span id="totalPrice">0 VND</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proceed Button -->
+            <div class="action-buttons">
+                <button id="proceedBtn" class="btn btn-primary btn-lg" onclick="proceedToPayment()" disabled>
+                    Proceed to Payment →
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 SaigonRide - Smart Vehicle Rental System</p>
+        <p class="footer-subtitle">Eco-friendly mobility for everyone</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let selectedVehicle = 'bike';
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initNav();
+            document.getElementById('userName2').textContent = getCurrentUser().name;
+            populateStations();
+        });
+
+        function selectVehicle(type) {
+            selectedVehicle = type;
+            document.getElementById('bikeCard').classList.toggle('active', type === 'bike');
+            document.getElementById('scooterCard').classList.toggle('active', type === 'scooter');
+            populateStations();
+            updateRental();
+        }
+
+        function populateStations() {
+            const startSelect = document.getElementById('startStation');
+            const returnSelect = document.getElementById('returnStation');
+            
+            const startValue = startSelect.value;
+            const returnValue = returnSelect.value;
+            
+            startSelect.innerHTML = '<option value="">Select start station</option>';
+            returnSelect.innerHTML = '<option value="">Select return station</option>';
+            
+            stations.forEach(station => {
+                const available = selectedVehicle === 'bike' ? station.availableBikes : station.availableScooters;
+                const startOption = new Option(`${station.name} (${available} available)`, station.id);
+                startOption.disabled = available === 0;
+                startSelect.add(startOption);
+                
+                const returnOption = new Option(
+                    station.name + (station.lowInventory ? ' - 15% OFF' : ''), 
+                    station.id
+                );
+                returnSelect.add(returnOption);
+            });
+            
+            startSelect.value = startValue;
+            returnSelect.value = returnValue;
+        }
+
+        function updateRental() {
+            const startStationId = document.getElementById('startStation').value;
+            const returnStationId = document.getElementById('returnStation').value;
+            const duration = parseInt(document.getElementById('duration').value);
+            
+            const startStation = stations.find(s => s.id === startStationId);
+            const returnStation = stations.find(s => s.id === returnStationId);
+            
+            // Update addresses
+            document.getElementById('startStationAddress').textContent = startStation ? startStation.address : '';
+            document.getElementById('returnStationAddress').textContent = returnStation ? returnStation.address : '';
+            
+            // Show discount message
+            const discountMsg = document.getElementById('returnStationDiscount');
+            if (returnStation && returnStation.lowInventory) {
+                discountMsg.style.display = 'block';
+            } else {
+                discountMsg.style.display = 'none';
+            }
+            
+            // Calculate price
+            const canProceed = startStationId && returnStationId && startStationId !== returnStationId;
+            
+            if (canProceed) {
+                const basePrice = pricing[selectedVehicle] * duration;
+                const discount = returnStation.lowInventory ? basePrice * pricing.lowInventoryDiscount : 0;
+                const totalPrice = basePrice - discount;
+                
+                document.getElementById('basePriceLabel').textContent = 
+                    `Base Price (${duration} min × ${formatNumber(pricing[selectedVehicle])} VND)`;
+                document.getElementById('basePrice').textContent = formatNumber(basePrice) + ' VND';
+                document.getElementById('discount').textContent = '-' + formatNumber(discount) + ' VND';
+                document.getElementById('totalPrice').textContent = formatNumber(totalPrice) + ' VND';
+                
+                document.getElementById('discountRow').style.display = discount > 0 ? 'flex' : 'none';
+                document.getElementById('priceSummary').style.display = 'block';
+                document.getElementById('proceedBtn').disabled = false;
+            } else {
+                document.getElementById('priceSummary').style.display = 'none';
+                document.getElementById('proceedBtn').disabled = true;
+            }
+        }
+
+        function proceedToPayment() {
+            const startStationId = document.getElementById('startStation').value;
+            const returnStationId = document.getElementById('returnStation').value;
+            const duration = parseInt(document.getElementById('duration').value);
+            
+            const startStation = stations.find(s => s.id === startStationId);
+            const returnStation = stations.find(s => s.id === returnStationId);
+            
+            const basePrice = pricing[selectedVehicle] * duration;
+            const discount = returnStation.lowInventory ? basePrice * pricing.lowInventoryDiscount : 0;
+            const totalPrice = basePrice - discount;
+            
+            const rentalData = {
+                vehicleType: selectedVehicle,
+                startStation: startStation.name,
+                returnStation: returnStation.name,
+                estimatedDuration: duration,
+                basePrice: basePrice,
+                discount: discount,
+                totalPrice: totalPrice
+            };
+            
+            async function proceedToPayment() {
+                const user = JSON.parse(localStorage.getItem("saigonride_user"));
+
+                const res = await fetch("https://localhost:7065/api/rental/create", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        bikeType: selectedVehicle
+                    })
+                });
+
+                const rental = await res.json();
+
+                // lưu rentalId thật từ backend
+                localStorage.setItem("rentalId", rental.id);
+
+                window.location.href = "payment.html";
+            }
+        }
+    </script>
+</body>
+</html>

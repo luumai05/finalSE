@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaigonRide - Payment</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="rental.html" class="nav-logo">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="5.5" cy="17.5" r="3.5"/>
+                    <circle cx="18.5" cy="17.5" r="3.5"/>
+                    <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+                </svg>
+                <span>SaigonRide</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container-lg">
+            <!-- Success Message -->
+            <div id="successMessage" class="success-container" style="display: none;">
+                <div class="card success-card">
+                    <div class="card-content">
+                        <div class="success-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <h2>Payment Successful!</h2>
+                        <p>Your rental has been confirmed</p>
+                        <div class="success-details">
+                            <div class="detail-row">
+                                <span>Vehicle:</span>
+                                <span id="successVehicle"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span>From:</span>
+                                <span id="successFrom"></span>
+                            </div>
+                            <div class="detail-row">
+                                <span>To:</span>
+                                <span id="successTo"></span>
+                            </div>
+                            <div class="detail-row highlight">
+                                <span>Total Paid:</span>
+                                <span id="successTotal"></span>
+                            </div>
+                        </div>
+                        <p class="redirect-message">Redirecting to rental page...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <div id="paymentForm">
+                <!-- Header -->
+                <div class="page-header">
+                    <button class="btn btn-ghost btn-sm" onclick="window.location.href='rental.html'">
+                        ← Back
+                    </button>
+                    <h1>Complete Payment</h1>
+                    <p>Select your preferred payment method</p>
+                </div>
+
+                <div class="payment-grid">
+                    <!-- Payment Methods -->
+                    <div class="payment-methods-section">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Payment Methods</h2>
+                                <p class="card-description">Choose how you'd like to pay</p>
+                            </div>
+                            <div class="card-content">
+                                <div id="paymentMethodsList"></div>
+                            </div>
+                        </div>
+
+                        <!-- Info Cards -->
+                        <div class="payment-info-grid">
+                            <div class="card info-card locals">
+                                <div class="card-content">
+                                    <div class="info-icon">💳</div>
+                                    <div>
+                                        <div class="info-label">For Locals</div>
+                                        <div class="info-value">MoMo, VNPay, Cash</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card info-card tourists">
+                                <div class="card-content">
+                                    <div class="info-icon">🌍</div>
+                                    <div>
+                                        <div class="info-label">For Tourists</div>
+                                        <div class="info-value">PayPal, Apple Pay</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="order-summary-section">
+                        <div class="card order-summary">
+                            <div class="card-header">
+                                <h2 class="card-title">Order Summary</h2>
+                            </div>
+                            <div class="card-content">
+                                <!-- Vehicle Info -->
+                                <div id="vehicleInfo" class="vehicle-info"></div>
+
+                                <!-- Route Info -->
+                                <div class="route-info">
+                                    <div class="route-item">
+                                        <span class="route-label">📍 Start</span>
+                                        <span id="orderStartStation"></span>
+                                    </div>
+                                    <div class="route-item">
+                                        <span class="route-label">📍 Return</span>
+                                        <span id="orderReturnStation"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Price Details -->
+                                <div class="price-details">
+                                    <div class="price-row">
+                                        <span>Base Price</span>
+                                        <span id="orderBasePrice"></span>
+                                    </div>
+                                    <div id="orderDiscountRow" class="price-row discount-row" style="display: none;">
+                                        <span>Discount (15%)</span>
+                                        <span id="orderDiscount"></span>
+                                    </div>
+                                    <div class="price-row price-total">
+                                        <span>Total</span>
+                                        <span id="orderTotal"></span>
+                                    </div>
+                                </div>
+
+                                <div id="savingsBadge" class="savings-badge" style="display: none;"></div>
+
+                                <!-- Pay Button -->
+                                <button id="payBtn" class="btn btn-primary btn-full btn-lg" onclick="processPayment()" disabled>
+                                    <span id="payBtnText">✓ Confirm & Pay</span>
+                                </button>
+
+                                <p id="paymentHint" class="payment-hint">Please select a payment method</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 SaigonRide - Smart Vehicle Rental System</p>
+        <p class="footer-subtitle">Eco-friendly mobility for everyone</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let selectedPayment = '';
+        let rentalData = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const data = localStorage.getItem('saigonride_current_rental');
+            if (!data) {
+                window.location.href = 'rental.html';
+                return;
+            }
+            
+            rentalData = JSON.parse(data);
+            initPaymentMethods();
+            populateOrderSummary();
+        });
+
+        function initPaymentMethods() {
+            const container = document.getElementById('paymentMethodsList');
+            
+            paymentMethods.forEach(method => {
+                const methodCard = document.createElement('button');
+                methodCard.className = 'payment-method-card';
+                methodCard.onclick = () => selectPayment(method.id);
+                methodCard.id = `payment-${method.id}`;
+                
+                methodCard.innerHTML = `
+                    <div class="payment-icon">${getPaymentIcon(method.id)}</div>
+                    <div class="payment-info">
+                        <div class="payment-name">${method.name}</div>
+                        <div class="payment-desc">${method.description}</div>
+                    </div>
+                    <div class="payment-check">✓</div>
+                `;
+                
+                container.appendChild(methodCard);
+            });
+        }
+
+        function getPaymentIcon(id) {
+            const icons = {
+                momo: '💰',
+                vnpay: '💳',
+                paypal: '💵',
+                applepay: '📱',
+                cash: '💸'
+            };
+            return icons[id] || '💳';
+        }
+
+        function selectPayment(id) {
+            selectedPayment = id;
+            
+            // Update UI
+            document.querySelectorAll('.payment-method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(`payment-${id}`).classList.add('selected');
+            
+            document.getElementById('payBtn').disabled = false;
+            document.getElementById('paymentHint').style.display = 'none';
+        }
+
+        function populateOrderSummary() {
+            // Vehicle info
+            const vehicleIcon = rentalData.vehicleType === 'bike' ? '🚲' : '⚡';
+            const vehicleName = rentalData.vehicleType === 'bike' ? 'Standard Bike' : 'E-Scooter';
+            document.getElementById('vehicleInfo').innerHTML = `
+                <div class="vehicle-badge">
+                    <span class="vehicle-badge-icon">${vehicleIcon}</span>
+                    <div>
+                        <div class="vehicle-badge-name">${vehicleName}</div>
+                        <div class="vehicle-badge-duration">${rentalData.estimatedDuration} minutes</div>
+                    </div>
+                </div>
+            `;
+            
+            // Stations
+            document.getElementById('orderStartStation').textContent = rentalData.startStation;
+            document.getElementById('orderReturnStation').textContent = rentalData.returnStation;
+            
+            // Prices
+            document.getElementById('orderBasePrice').textContent = formatNumber(rentalData.basePrice) + ' VND';
+            document.getElementById('orderDiscount').textContent = '-' + formatNumber(rentalData.discount) + ' VND';
+            document.getElementById('orderTotal').textContent = formatNumber(rentalData.totalPrice) + ' VND';
+            
+            if (rentalData.discount > 0) {
+                document.getElementById('orderDiscountRow').style.display = 'flex';
+                document.getElementById('savingsBadge').style.display = 'block';
+                document.getElementById('savingsBadge').textContent = 
+                    `You saved ${formatNumber(rentalData.discount)} VND!`;
+            }
+        }
+
+        async function processPayment() {
+            if (!selectedPayment) return;
+            
+            const payBtn = document.getElementById('payBtn');
+            const payBtnText = document.getElementById('payBtnText');
+            
+            payBtn.disabled = true;
+            payBtnText.innerHTML = '<div class="spinner"></div> Processing...';
+            
+            // Simulate payment processing
+            async function processPayment() {
+                if (!selectedPayment) return;
+
+                const rentalId = localStorage.getItem("rentalId");
+
+                const res = await fetch(`https://localhost:7065/api/payment/pay?rentalId=${rentalId}&method=${selectedPayment}`, {
+                    method: "POST"
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    alert("Payment failed");
+                    return;
+                }
+
+                alert("Payment success!");
+            }
+            
+            // Show success message
+            document.getElementById('paymentForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            document.getElementById('successVehicle').textContent = 
+                rentalData.vehicleType === 'bike' ? 'Standard Bike' : 'E-Scooter';
+            document.getElementById('successFrom').textContent = rentalData.startStation;
+            document.getElementById('successTo').textContent = rentalData.returnStation;
+            document.getElementById('successTotal').textContent = formatNumber(rentalData.totalPrice) + ' VND';
+            
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                localStorage.removeItem('saigonride_current_rental');
+                window.location.href = 'rental.html';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

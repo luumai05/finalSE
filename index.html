@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaigonRide - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-content">
+            <!-- Logo and Title -->
+            <div class="login-header">
+                <div class="logo-circle">
+                    <svg class="bike-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="5.5" cy="17.5" r="3.5"/>
+                        <circle cx="18.5" cy="17.5" r="3.5"/>
+                        <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                        <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+                    </svg>
+                </div>
+                <h1>SaigonRide</h1>
+                <p class="subtitle">Smart Vehicle Rental System</p>
+            </div>
+
+            <!-- Login Card -->
+            <div class="card login-card">
+                <div class="card-header">
+                    <div class="lang-switch">
+                        <button onclick="setLanguage('en')">EN</button>
+                        <button onclick="setLanguage('vi')">VI</button>
+                    </div>
+                    <h2 class="card-title" data-key="welcome">Welcome Back</h2>
+                    <p class="card-description">Login to start your eco-friendly journey</p>
+                </div>
+                <div class="card-content">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="username" data-key="username">Username</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="username" placeholder="Enter username" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" data-key="password">Password</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="password" placeholder="Enter password" required>
+                            </div>
+                        </div>
+
+                        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+                        <button type="submit" class="btn btn-primary btn-full" data-key="login">Login</button>
+                        <p style="margin-top:10px; text-align:center;">
+                            Don't have account? <a href="register.html">Register</a>
+                        </p>
+                    </form>
+            <!-- Features -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-number">500+</div>
+                    <div class="feature-label">Vehicles</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">20+</div>
+                    <div class="feature-label">Stations</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="language.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMessage');
+            
+            // Find user
+            
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const res = await fetch("https://localhost:7065/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            if (!res.ok) {
+                document.getElementById('errorMessage').textContent = "Login failed";
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            const user = await res.json();
+
+            localStorage.setItem('saigonride_user', JSON.stringify(user));
+
+            window.location.href = 'rental.html';
+        });
+
+            
+            // Store user in localStorage
+            localStorage.setItem('saigonride_user', JSON.stringify(user));
+            
+            // Redirect to rental page
+            window.location.href = 'rental.html';
+        });
+    </script>
+</body>
+</html>
