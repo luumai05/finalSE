@@ -26,7 +26,7 @@
     <main class="main-content">
         <div class="container-lg">
             <!-- Success Message -->
-            <div id="successMessage" class="success-container" style="display: none;">
+            <!-- <div id="successMessage" class="success-container" style="display: none;">
                 <div class="card success-card">
                     <div class="card-content">
                         <div class="success-icon">
@@ -58,7 +58,7 @@
                         <p class="redirect-message">Redirecting to rental page...</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Payment Form -->
             <div id="paymentForm">
@@ -118,7 +118,7 @@
                                 <div id="vehicleInfo" class="vehicle-info"></div>
 
                                 <!-- Route Info -->
-                                <div class="route-info">
+                                <!-- <div class="route-info">
                                     <div class="route-item">
                                         <span class="route-label">📍 Start</span>
                                         <span id="orderStartStation"></span>
@@ -127,7 +127,7 @@
                                         <span class="route-label">📍 Return</span>
                                         <span id="orderReturnStation"></span>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <!-- Price Details -->
                                 <div class="price-details">
@@ -173,16 +173,31 @@
         let selectedPayment = '';
         let rentalData = null;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const data = localStorage.getItem('saigonride_current_rental');
-            if (!data) {
-                window.location.href = 'rental.html';
-                return;
-            }
-            
-            rentalData = JSON.parse(data);
+        document.addEventListener('DOMContentLoaded', function () {
+
             initPaymentMethods();
-            populateOrderSummary();
+
+            const totalPrice = localStorage.getItem("totalPrice");
+
+            document.getElementById("orderTotal").textContent =
+            Math.round(totalPrice) + " VND";
+
+            document.getElementById("orderBasePrice").textContent =
+            Math.round(totalPrice) + " VND";
+
+            document.getElementById("orderDiscountRow").style.display = "none";
+
+            document.getElementById("vehicleInfo").innerHTML = `
+                <div class="vehicle-badge">
+                    <span class="vehicle-badge-icon">🚲</span>
+                    <div>
+                        <div class="vehicle-badge-name">Rental Completed</div>
+                        <div class="vehicle-badge-duration">
+                            Fare calculated by backend
+                        </div>
+                    </div>
+                </div>
+            `;
         });
 
         function initPaymentMethods() {
@@ -231,81 +246,110 @@
             document.getElementById('paymentHint').style.display = 'none';
         }
 
-        function populateOrderSummary() {
-            // Vehicle info
-            const vehicleIcon = rentalData.vehicleType === 'bike' ? '🚲' : '⚡';
-            const vehicleName = rentalData.vehicleType === 'bike' ? 'Standard Bike' : 'E-Scooter';
-            document.getElementById('vehicleInfo').innerHTML = `
-                <div class="vehicle-badge">
-                    <span class="vehicle-badge-icon">${vehicleIcon}</span>
-                    <div>
-                        <div class="vehicle-badge-name">${vehicleName}</div>
-                        <div class="vehicle-badge-duration">${rentalData.estimatedDuration} minutes</div>
-                    </div>
-                </div>
-            `;
+        // function populateOrderSummary() {
+        //     // Vehicle info
+        //     const vehicleIcon = rentalData.vehicleType === 'bike' ? '🚲' : '⚡';
+        //     const vehicleName = rentalData.vehicleType === 'bike' ? 'Standard Bike' : 'E-Scooter';
+        //     document.getElementById('vehicleInfo').innerHTML = `
+        //         <div class="vehicle-badge">
+        //             <span class="vehicle-badge-icon">${vehicleIcon}</span>
+        //             <div>
+        //                 <div class="vehicle-badge-name">${vehicleName}</div>
+        //                 <div class="vehicle-badge-duration">${rentalData.estimatedDuration} minutes</div>
+        //             </div>
+        //         </div>
+        //     `;
             
-            // Stations
-            document.getElementById('orderStartStation').textContent = rentalData.startStation;
-            document.getElementById('orderReturnStation').textContent = rentalData.returnStation;
+        //     // Stations
+        //     document.getElementById('orderStartStation').textContent = rentalData.startStation;
+        //     document.getElementById('orderReturnStation').textContent = rentalData.returnStation;
             
-            // Prices
-            document.getElementById('orderBasePrice').textContent = formatNumber(rentalData.basePrice) + ' VND';
-            document.getElementById('orderDiscount').textContent = '-' + formatNumber(rentalData.discount) + ' VND';
-            document.getElementById('orderTotal').textContent = formatNumber(rentalData.totalPrice) + ' VND';
+        //     // Prices
+        //     document.getElementById('orderBasePrice').textContent = formatNumber(rentalData.basePrice) + ' VND';
+        //     document.getElementById('orderDiscount').textContent = '-' + formatNumber(rentalData.discount) + ' VND';
+        //     document.getElementById('orderTotal').textContent = formatNumber(rentalData.totalPrice) + ' VND';
             
-            if (rentalData.discount > 0) {
-                document.getElementById('orderDiscountRow').style.display = 'flex';
-                document.getElementById('savingsBadge').style.display = 'block';
-                document.getElementById('savingsBadge').textContent = 
-                    `You saved ${formatNumber(rentalData.discount)} VND!`;
-            }
-        }
+        //     if (rentalData.discount > 0) {
+        //         document.getElementById('orderDiscountRow').style.display = 'flex';
+        //         document.getElementById('savingsBadge').style.display = 'block';
+        //         document.getElementById('savingsBadge').textContent = 
+        //             `You saved ${formatNumber(rentalData.discount)} VND!`;
+        //     }
+        // }
+
+        // async function processPayment() {
+        //     if (!selectedPayment) return;
+            
+        //     const payBtn = document.getElementById('payBtn');
+        //     const payBtnText = document.getElementById('payBtnText');
+            
+        //     payBtn.disabled = true;
+        //     payBtnText.innerHTML = '<div class="spinner"></div> Processing...';
+            
+        //     // Simulate payment processing
+        //     async function processPayment() {
+        //         if (!selectedPayment) return;
+
+        //         const rentalId = localStorage.getItem("rentalId");
+
+        //         const res = await fetch(`https://localhost:7065/api/payment/pay?rentalId=${rentalId}&method=${selectedPayment}`, {
+        //             method: "POST"
+        //         });
+
+        //         const data = await res.json();
+
+        //         if (!res.ok) {
+        //             alert("Payment failed");
+        //             return;
+        //         }
+
+        //         alert("Payment success!");
+        //     }
+            
+        //     // Show success message
+        //     document.getElementById('paymentForm').style.display = 'none';
+        //     document.getElementById('successMessage').style.display = 'block';
+            
+        //     document.getElementById('successVehicle').textContent = 
+        //         rentalData.vehicleType === 'bike' ? 'Standard Bike' : 'E-Scooter';
+        //     document.getElementById('successFrom').textContent = rentalData.startStation;
+        //     document.getElementById('successTo').textContent = rentalData.returnStation;
+        //     document.getElementById('successTotal').textContent = formatNumber(rentalData.totalPrice) + ' VND';
+            
+        //     // Redirect after 3 seconds
+        //     setTimeout(() => {
+        //         localStorage.removeItem('saigonride_current_rental');
+        //         window.location.href = 'rental.html';
+        //     }, 3000);
+        // }
 
         async function processPayment() {
-            if (!selectedPayment) return;
-            
-            const payBtn = document.getElementById('payBtn');
-            const payBtnText = document.getElementById('payBtnText');
-            
-            payBtn.disabled = true;
-            payBtnText.innerHTML = '<div class="spinner"></div> Processing...';
-            
-            // Simulate payment processing
-            async function processPayment() {
-                if (!selectedPayment) return;
 
-                const rentalId = localStorage.getItem("rentalId");
+            if (!selectedPayment) {
+                alert("Please select payment method");
+                return;
+            }
 
-                const res = await fetch(`https://localhost:7065/api/payment/pay?rentalId=${rentalId}&method=${selectedPayment}`, {
+            const rentalId = localStorage.getItem("rentalId");
+
+            const res = await fetch(
+                `https://localhost:7065/api/payment/pay?rentalId=${rentalId}&method=${selectedPayment}`,
+                {
                     method: "POST"
                 });
 
-                const data = await res.json();
+            if (!res.ok) {
 
-                if (!res.ok) {
-                    alert("Payment failed");
-                    return;
-                }
+                const error = await res.text();
 
-                alert("Payment success!");
+                alert(error);
+
+                return;
             }
-            
-            // Show success message
-            document.getElementById('paymentForm').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'block';
-            
-            document.getElementById('successVehicle').textContent = 
-                rentalData.vehicleType === 'bike' ? 'Standard Bike' : 'E-Scooter';
-            document.getElementById('successFrom').textContent = rentalData.startStation;
-            document.getElementById('successTo').textContent = rentalData.returnStation;
-            document.getElementById('successTotal').textContent = formatNumber(rentalData.totalPrice) + ' VND';
-            
-            // Redirect after 3 seconds
-            setTimeout(() => {
-                localStorage.removeItem('saigonride_current_rental');
-                window.location.href = 'rental.html';
-            }, 3000);
+
+            alert("Payment success!");
+
+            window.location.href = "success.html";
         }
     </script>
 </body>

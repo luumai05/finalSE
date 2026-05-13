@@ -65,37 +65,38 @@
 </div>
 
 <script>
-document.getElementById("registerForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const phone = document.getElementById("phone").value;
-
-    const res = await fetch("https://localhost:7065/api/auth/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            name: name,
-            email: email,
-            password: password,
-            phone: phone
-        })
+    document.getElementById("registerForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+    
+        const formData = new FormData();
+    
+        formData.append("Name", document.getElementById("name").value);
+        formData.append("Email", document.getElementById("email").value);
+        formData.append("Password", document.getElementById("password").value);
+        formData.append("Phone", document.getElementById("phone").value);
+    
+        const file = document.getElementById("cccd").files[0];
+    
+        if (file) {
+            formData.append("CccdImage", file);
+        }
+    
+        const res = await fetch("https://localhost:7065/api/auth/register", {
+            method: "POST",
+            body: formData
+        });
+    
+        const text = await res.text();
+    
+        if (!res.ok) {
+            alert(text);
+            return;
+        }
+    
+        alert("Register success!");
+        window.location.href = "index.html";
     });
-
-    if (!res.ok) {
-        document.getElementById("errorMessage").textContent = "Register failed";
-        document.getElementById("errorMessage").style.display = "block";
-        return;
-    }
-
-    alert("Register success! Please login.");
-    window.location.href = "index.html";
-});
-</script>
+    </script>
 
 </body>
 </html>

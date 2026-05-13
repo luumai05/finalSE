@@ -10,7 +10,7 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="rental.html" class="nav-logo">
+            <a href="home.html" class="nav-logo">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="5.5" cy="17.5" r="3.5"/>
                     <circle cx="18.5" cy="17.5" r="3.5"/>
@@ -22,7 +22,7 @@
 
             <div class="nav-desktop">
                 <a href="rental.html" class="nav-link active">New Rental</a>
-                <a href="dashboard.html" class="nav-link nav-dashboard">Dashboard</a>
+                <a href="home.html" class="nav-link nav-dashboard">Home</a>
                 <div class="nav-user">
                     <span id="userName"></span>
                     <span id="userRole"></span>
@@ -47,7 +47,7 @@
 
         <div id="mobileMenu" class="nav-mobile">
             <a href="rental.html" class="nav-link active">New Rental</a>
-            <a href="dashboard.html" class="nav-link nav-dashboard">Dashboard</a>
+            <a href="home.html" class="nav-link nav-dashboard">Home</a>
             <div class="nav-mobile-user">
                 <span id="userName2"></span>
                 <button onclick="logout()" class="btn btn-secondary btn-sm">Logout</button>
@@ -128,7 +128,7 @@
                         </p>
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label>Estimated Duration</label>
                         <select id="duration" onchange="updateRental()">
                             <option value="15">15 minutes</option>
@@ -138,12 +138,12 @@
                             <option value="90">1.5 hours</option>
                             <option value="120">2 hours</option>
                         </select>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
             <!-- Price Summary -->
-            <div id="priceSummary" class="card price-summary" style="display: none;">
+            <!-- <div id="priceSummary" class="card price-summary" style="display: none;">
                 <div class="card-header">
                     <h2 class="card-title">Price Summary</h2>
                 </div>
@@ -161,12 +161,12 @@
                         <span id="totalPrice">0 VND</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <!-- Proceed Button -->
+            <!-- start rental Button -->
             <div class="action-buttons">
-                <button id="proceedBtn" class="btn btn-primary btn-lg" onclick="proceedToPayment()" disabled>
-                    Proceed to Payment →
+                <button id="startRentalBtn" class="btn btn-primary btn-lg" onclick="startRental()" disabled>
+                    Start Rental →
                 </button>
             </div>
         </div>
@@ -225,93 +225,173 @@
             returnSelect.value = returnValue;
         }
 
+        // function updateRental() {
+        //     const startStationId = document.getElementById('startStation').value;
+        //     const returnStationId = document.getElementById('returnStation').value;
+        //     const duration = parseInt(document.getElementById('duration').value);
+            
+        //     const startStation = stations.find(s => s.id === startStationId);
+        //     const returnStation = stations.find(s => s.id === returnStationId);
+            
+        //     // Update addresses
+        //     document.getElementById('startStationAddress').textContent = startStation ? startStation.address : '';
+        //     document.getElementById('returnStationAddress').textContent = returnStation ? returnStation.address : '';
+            
+        //     // Show discount message
+        //     const discountMsg = document.getElementById('returnStationDiscount');
+        //     if (returnStation && returnStation.lowInventory) {
+        //         discountMsg.style.display = 'block';
+        //     } else {
+        //         discountMsg.style.display = 'none';
+        //     }
+            
+        //     // Calculate price
+        //     const canProceed = startStationId && returnStationId && startStationId !== returnStationId;
+            
+        //     if (canProceed) {
+        //         const basePrice = pricing[selectedVehicle] * duration;
+        //         const discount = returnStation.lowInventory ? basePrice * pricing.lowInventoryDiscount : 0;
+        //         const totalPrice = basePrice - discount;
+                
+        //         document.getElementById('basePriceLabel').textContent = 
+        //             `Base Price (${duration} min × ${formatNumber(pricing[selectedVehicle])} VND)`;
+        //         document.getElementById('basePrice').textContent = formatNumber(basePrice) + ' VND';
+        //         document.getElementById('discount').textContent = '-' + formatNumber(discount) + ' VND';
+        //         document.getElementById('totalPrice').textContent = formatNumber(totalPrice) + ' VND';
+                
+        //         document.getElementById('discountRow').style.display = discount > 0 ? 'flex' : 'none';
+        //         document.getElementById('priceSummary').style.display = 'block';
+        //         document.getElementById('proceedBtn').disabled = false;
+        //     } else {
+        //         document.getElementById('priceSummary').style.display = 'none';
+        //         document.getElementById('proceedBtn').disabled = true;
+        //     }
+        // }
+        
         function updateRental() {
-            const startStationId = document.getElementById('startStation').value;
-            const returnStationId = document.getElementById('returnStation').value;
-            const duration = parseInt(document.getElementById('duration').value);
-            
-            const startStation = stations.find(s => s.id === startStationId);
-            const returnStation = stations.find(s => s.id === returnStationId);
-            
-            // Update addresses
-            document.getElementById('startStationAddress').textContent = startStation ? startStation.address : '';
-            document.getElementById('returnStationAddress').textContent = returnStation ? returnStation.address : '';
-            
-            // Show discount message
-            const discountMsg = document.getElementById('returnStationDiscount');
-            if (returnStation && returnStation.lowInventory) {
-                discountMsg.style.display = 'block';
-            } else {
-                discountMsg.style.display = 'none';
-            }
-            
-            // Calculate price
-            const canProceed = startStationId && returnStationId && startStationId !== returnStationId;
-            
-            if (canProceed) {
-                const basePrice = pricing[selectedVehicle] * duration;
-                const discount = returnStation.lowInventory ? basePrice * pricing.lowInventoryDiscount : 0;
-                const totalPrice = basePrice - discount;
-                
-                document.getElementById('basePriceLabel').textContent = 
-                    `Base Price (${duration} min × ${formatNumber(pricing[selectedVehicle])} VND)`;
-                document.getElementById('basePrice').textContent = formatNumber(basePrice) + ' VND';
-                document.getElementById('discount').textContent = '-' + formatNumber(discount) + ' VND';
-                document.getElementById('totalPrice').textContent = formatNumber(totalPrice) + ' VND';
-                
-                document.getElementById('discountRow').style.display = discount > 0 ? 'flex' : 'none';
-                document.getElementById('priceSummary').style.display = 'block';
-                document.getElementById('proceedBtn').disabled = false;
-            } else {
-                document.getElementById('priceSummary').style.display = 'none';
-                document.getElementById('proceedBtn').disabled = true;
-            }
-        }
 
-        function proceedToPayment() {
             const startStationId = document.getElementById('startStation').value;
             const returnStationId = document.getElementById('returnStation').value;
-            const duration = parseInt(document.getElementById('duration').value);
-            
-            const startStation = stations.find(s => s.id === startStationId);
-            const returnStation = stations.find(s => s.id === returnStationId);
-            
-            const basePrice = pricing[selectedVehicle] * duration;
-            const discount = returnStation.lowInventory ? basePrice * pricing.lowInventoryDiscount : 0;
-            const totalPrice = basePrice - discount;
-            
+
+            const canProceed =
+                startStationId &&
+                returnStationId &&
+                startStationId !== returnStationId;
+
+            document.getElementById('startRentalBtn').disabled = !canProceed;
+            }
+
+
+        // async function proceedToPayment() {
+
+        //     const user = JSON.parse(localStorage.getItem("saigonride_user"));
+
+        //     if (!user) {
+        //         alert("Please login first");
+        //         return;
+        //     }
+
+        //     const startStationId = document.getElementById('startStation').value;
+        //     const returnStationId = document.getElementById('returnStation').value;
+
+        //     if (!startStationId || !returnStationId) {
+        //         alert("Please select stations");
+        //         return;
+        //     }
+
+        //     const res = await fetch("https://localhost:7065/api/rental/create", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         },
+        //         body: JSON.stringify({
+        //             userId: user.id,
+        //             bikeType: selectedVehicle
+        //         })
+        //     });
+
+        //     if (!res.ok) {
+        //         const error = await res.text();
+        //         alert(error);
+        //         return;
+        //     }
+
+        //     const rental = await res.json();
+
+        //     // lưu rentalId
+        //     localStorage.setItem("rentalId", rental.id);
+
+        //     alert("Rental created!");
+
+        //     window.location.href = "payment.html";
+        // }
+
+        async function startRental() {
+
+            const user = JSON.parse(localStorage.getItem("saigonride_user"));
+
+            if (!user) {
+                alert("Please login first");
+                return;
+            }
+
+            const startStationId =
+                document.getElementById('startStation').value;
+
+            const returnStationId =
+                document.getElementById('returnStation').value;
+
+            if (!startStationId || !returnStationId) {
+                alert("Please select stations");
+                return;
+            }
+
+            if (!selectedVehicle) {
+                alert("Please select vehicle");
+                return;
+            }
+
             const rentalData = {
-                vehicleType: selectedVehicle,
-                startStation: startStation.name,
-                returnStation: returnStation.name,
-                estimatedDuration: duration,
-                basePrice: basePrice,
-                discount: discount,
-                totalPrice: totalPrice
+                userId: user.id,
+                bikeType: selectedVehicle
             };
-            
-            async function proceedToPayment() {
-                const user = JSON.parse(localStorage.getItem("saigonride_user"));
 
-                const res = await fetch("https://localhost:7065/api/rental/create", {
+            console.log(rentalData);
+
+            const res = await fetch(
+                "https://localhost:7065/api/rental/create",
+                {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        bikeType: selectedVehicle
-                    })
+                    body: JSON.stringify(rentalData)
                 });
 
-                const rental = await res.json();
+            if (!res.ok) {
 
-                // lưu rentalId thật từ backend
-                localStorage.setItem("rentalId", rental.id);
+                const error = await res.text();
 
-                window.location.href = "payment.html";
+                alert(error);
+
+                return;
             }
+
+            const rental = await res.json();
+
+            localStorage.setItem("rentalId", rental.id);
+
+            localStorage.setItem(
+                "activeRental",
+                JSON.stringify(rental)
+            );
+
+            alert("Rental started!");
+
+            window.location.href = "active-rental.html";
         }
+                    
+                    
     </script>
 </body>
 </html>
