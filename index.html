@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaigonRide - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-content">
+            <!-- Logo and Title -->
+            <div class="login-header">
+                <div class="logo-circle">
+                    <svg class="bike-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="5.5" cy="17.5" r="3.5"/>
+                        <circle cx="18.5" cy="17.5" r="3.5"/>
+                        <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                        <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+                    </svg>
+                </div>
+                <h1>SaigonRide</h1>
+                <p class="subtitle">Smart Vehicle Rental System</p>
+            </div>
+
+            <!-- Login Card -->
+            <div class="card login-card">
+                <div class="card-header">
+                    <div class="lang-switch">
+                        <button onclick="setLanguage('en')">EN</button>
+                        <button onclick="setLanguage('vi')">VI</button>
+                    </div>
+                    <h2 class="card-title" data-key="welcome">Welcome Back</h2>
+                    <p class="card-description">Login to start your eco-friendly journey</p>
+                </div>
+                <div class="card-content">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="username" data-key="username">Username</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="username" placeholder="Enter username" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" data-key="password">Password</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="password" placeholder="Enter password" required>
+                            </div>
+                        </div>
+
+                        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+                        <button type="submit" class="btn btn-primary btn-full" data-key="login">Login</button>
+                    </form>
+
+                    <!-- Demo Credentials -->
+                    <div class="demo-credentials">
+                        <p class="demo-title">Demo Credentials:</p>
+                        <div class="demo-list">
+                            <p><strong>Regular User:</strong> commuter / any password</p>
+                            <p><strong>Tourist:</strong> tourist / any password</p>
+                            <p><strong>Admin:</strong> admin / any password</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-number">500+</div>
+                    <div class="feature-label">Vehicles</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">20+</div>
+                    <div class="feature-label">Stations</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="language.js"></script>
+    <script>
+        // Thay đổi URL này cho đúng với Port trên Swagger của bạn
+        const apiURL = 'https://localhost:7030/api/Users'; 
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const usernameInput = document.getElementById('username').value.trim();
+            const errorMsg = document.getElementById('errorMessage');
+            
+            console.log("Đang thử đăng nhập với:", usernameInput);
+
+            try {
+                // GỌI API THỰC TẾ (Thay port 7230 bằng port của bạn nếu khác)
+                const response = await fetch('https://localhost:7030/api/Users');
+                const users = await response.json();
+                
+                console.log("Danh sách user từ DB:", users);
+                // DEBUG: Kiểm tra cấu trúc dữ liệu thực tế từ API
+                if (users && users.length > 0) {
+                    console.log("Dữ liệu chi tiết user đầu tiên:", users[0]);
+                }
+
+                // Tìm user (Không phân biệt hoa thường để dễ đăng nhập)
+                const user = users.find(u => u.username.toLowerCase() === usernameInput.toLowerCase());
+                
+                if (user) {
+                    // 1. Lưu dữ liệu vào localStorage
+                    const userData = {
+                        id: user.id,
+                        username: user.username,
+                        name: user.full_name || user.fullName, // Kiểm tra cả 2 trường hợp
+                        // THỬ CẢ 2 CÁCH: Kiểm tra userType (API) hoặc user_type (DB)
+                        role: (user.userType === 'admin' || user.user_type === 'admin') ? 'admin' : 'user' 
+                    };
+                    
+                    console.log("Dữ liệu user sau mapping:", userData);
+                    localStorage.setItem('saigonride_user', JSON.stringify(userData));
+
+                    // 2. LOGIC PHÂN LUỒNG QUAN TRỌNG:
+                    if (userData.role === 'admin') {
+                        console.log("Quyền Admin - Chuyển đến Dashboard");
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        console.log("Quyền User - Chuyển đến Rental");
+                        window.location.href = 'rental.html';
+                    }
+                } else {
+                    errorMsg.textContent = 'Tài khoản không tồn tại trong Database!';
+                    errorMsg.style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error("Lỗi kết nối API:", error);
+                errorMsg.textContent = 'Không thể kết nối Backend. Hãy kiểm tra CORS!';
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
