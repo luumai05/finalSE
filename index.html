@@ -118,12 +118,10 @@
                 const user = users.find(u => u.username.toLowerCase() === usernameInput.toLowerCase());
                 
                 if (user) {
-                    // 1. Lưu dữ liệu vào localStorage
                     const userData = {
                         id: user.id,
                         username: user.username,
-                        name: user.full_name || user.fullName, // Kiểm tra cả 2 trường hợp
-                        // THỬ CẢ 2 CÁCH: Kiểm tra userType (API) hoặc user_type (DB)
+                        name: user.full_name || user.fullName, 
                         role: (user.userType === 'admin' || user.user_type === 'admin') ? 'admin' : 'user' 
                     };
                     
