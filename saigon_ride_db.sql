@@ -124,7 +124,6 @@ SELECT 'Stations', COUNT(*) FROM stations
 UNION ALL
 SELECT 'Rentals', COUNT(*) FROM rentals;
 
--- 7. KIỂM TRA KẾT QUẢ
 SELECT * FROM users;
 SELECT * FROM vehicles;
 SELECT * FROM rentals;
