@@ -52,7 +52,6 @@ body {
     cursor: pointer;
 }
 
-/* Login Page */
 .login-page {
     background: linear-gradient(135deg, var(--emerald-50) 0%, var(--teal-50) 50%, #e0f2fe 100%);
     min-height: 100vh;

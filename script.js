@@ -17,7 +17,6 @@ async function fetchUsers() {
     }
 }
 
-// Hàm xử lý đăng nhập thực tế (gọi nếu bạn đã viết API Login)
 async function loginUser(username, password) {
     try {
         // Trong thực tế bạn sẽ POST lên /api/Auth/login
