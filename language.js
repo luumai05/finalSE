@@ -2,7 +2,7 @@ const translations = {
     en: {
         login: "Login",
         welcome: "Welcome Back",
-        username: "Username",
+        username: "Email",
         password: "Password",
         dashboard: "Dashboard",
         newRental: "New Rental",
@@ -16,11 +16,12 @@ const translations = {
         totalRentals: "Total Rentals",
         activeRentals: "Active Rentals",
         totalVehicles: "Total Vehicles"
+        
     },
     vi: {
         login: "Đăng nhập",
         welcome: "Chào mừng",
-        username: "Tên đăng nhập",
+        username: "Email",
         password: "Mật khẩu",
         dashboard: "Bảng điều khiển",
         newRental: "Thuê xe",

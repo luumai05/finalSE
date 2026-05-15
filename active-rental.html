@@ -285,6 +285,11 @@ async function endRental() {
         Math.round(rental.totalPrice)
     );
 
+    localStorage.setItem(
+        "pendingPayment",
+        "true"
+    );
+
     window.location.href =
         "payment.html";
 }

@@ -36,13 +36,13 @@
                 <div class="card-content">
                     <form id="loginForm">
                         <div class="form-group">
-                            <label for="username" data-key="username">Username</label>
+                            <label for="username" data-key="username">Email</label>
                             <div class="input-wrapper">
                                 <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                                     <circle cx="12" cy="7" r="4"/>
                                 </svg>
-                                <input type="text" id="username" placeholder="Enter username" required>
+                                <input type="email" id="email" placeholder="Enter your Email" required>
                             </div>
                         </div>
 
@@ -82,52 +82,74 @@
     <script src="script.js"></script>
     <script src="language.js"></script>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMsg = document.getElementById('errorMessage');
-            
-            // Find user
-            
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+    document.getElementById("loginForm")
+    .addEventListener("submit", async function(e) {
 
-            const email = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        e.preventDefault();
 
-            const res = await fetch("https://localhost:7065/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
+        const email =
+            document.getElementById("email").value;
 
-            if (!res.ok) {
-                document.getElementById('errorMessage').textContent = "Login failed";
-                document.getElementById('errorMessage').style.display = 'block';
+        const password =
+            document.getElementById("password").value;
+
+        try {
+
+            const response = await fetch(
+                "https://localhost:7065/api/auth/login",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                }
+            );
+
+            if (!response.ok) {
+
+                alert("Login failed");
+
                 return;
             }
 
-            const user = await res.json();
+            // GET RESPONSE DATA
+            const data = await response.json();
 
-            localStorage.setItem('saigonride_user', JSON.stringify(user));
+            console.log(data);
 
-            window.location.href = 'home.html';
-        });
+            // SAVE USER
+            localStorage.setItem(
+                "saigonride_user",
+                JSON.stringify(data)
+            );
 
-            
-            // Store user in localStorage
-            localStorage.setItem('saigonride_user', JSON.stringify(user));
-            
-            // Redirect to home page
-            window.location.href = 'home.html';
-        });
+            // REDIRECT
+            if (data.role === "admin") {
+
+                window.location.href =
+                    "admin.html";
+            }
+            else {
+
+                window.location.href =
+                    "home.html";
+            }
+
+        }
+        catch(error) {
+
+            console.error(error);
+
+            alert("Server error");
+        }
+
+    });
     </script>
 </body>
 </html>

@@ -328,6 +328,21 @@
 
         async function startRental() {
 
+            const activeRental =
+                localStorage.getItem("activeRental");
+
+            if (activeRental) {
+
+                alert(
+                    "You already have an active rental"
+                );
+
+                window.location.href =
+                    "active-rental.html";
+
+                return;
+            }
+
             const user = JSON.parse(localStorage.getItem("saigonride_user"));
 
             if (!user) {

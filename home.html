@@ -288,8 +288,9 @@
 
         <div id="mobileMenu" class="nav-mobile">
             <a href="home.html" class="nav-link active">Home</a>
-            <a href="rental.html"
-            class="nav-link">New Rental</a>
+            <a href="#"
+                onclick="handleTopUp(event)"
+                class="nav-link">New Rental</a>
             <div class="nav-mobile-user">
                 <span id="userName2"></span>
                 <button onclick="logout()" class="btn btn-secondary btn-sm">Logout</button>
@@ -308,7 +309,7 @@
                     <p>Ready to ride? Choose a station near you and hit the road.</p>
                 </div>
                 <div class="welcome-actions">
-                    <a onclick="handleNewRental()" class="btn btn-white btn-lg">
+                    <a onclick="handleNewRental(event)" class="btn btn-white btn-lg">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="5.5" cy="17.5" r="3.5"/>
                             <circle cx="18.5" cy="17.5" r="3.5"/>
@@ -317,7 +318,9 @@
                         </svg>
                         Rent Now
                     </a>
-                    <a href="payment.html" class="btn btn-outline-white btn-lg">
+                    <a href="#"
+                        onclick="handleTopUp(event)"
+                        class="btn btn-outline-white btn-lg">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
                             <line x1="1" y1="10" x2="23" y2="10"/>
@@ -380,6 +383,71 @@
                     onclick="goToActiveRental()">
 
                 View Active Rental
+
+            </button>
+
+            </div>
+
+            </div>
+
+            <!-- Pending Payment Warning -->
+            <div id="pendingPaymentCard"
+            class="card"
+            style="
+            display:none;
+            margin-bottom:1.5rem;
+            border:2px solid #ef4444;
+            background:#fef2f2;
+            ">
+
+            <div class="card-content"
+                style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:1rem;
+                flex-wrap:wrap;
+                ">
+
+            <div>
+
+                <div style="
+                    display:inline-flex;
+                    align-items:center;
+                    gap:0.5rem;
+                    background:#fee2e2;
+                    color:#b91c1c;
+                    padding:0.35rem 0.75rem;
+                    border-radius:999px;
+                    font-size:0.8rem;
+                    font-weight:600;
+                    margin-bottom:0.75rem;
+                ">
+                    ⚠ Payment Pending
+                </div>
+
+                <h3 style="
+                    font-size:1.15rem;
+                    font-weight:700;
+                    margin-bottom:0.35rem;
+                    color:#991b1b;
+                ">
+                    You have an unpaid rental
+                </h3>
+
+                <p style="
+                    color:#7f1d1d;
+                    font-size:0.9rem;
+                ">
+                    Please complete your payment before creating a new rental.
+                </p>
+
+            </div>
+
+            <button class="btn btn-danger btn-lg"
+                    onclick="goToPayment()">
+
+                Complete Payment
 
             </button>
 
@@ -571,8 +639,10 @@
                         <div id="stationList">
                             <!-- Populated by JS -->
                         </div>
-                        <a href="rental.html"
-                        class="btn btn-primary btn-full" style="margin-top:1rem;">
+                        <a href="#"
+                            onclick="handleNewRental(event)"
+                            class="btn btn-primary btn-full"
+                            style="margin-top:1rem;">
                             View All &amp; Rent
                         </a>
                     </div>
@@ -710,6 +780,7 @@
             renderStations();
 
             checkActiveRental();
+            checkPendingPayment();
         });
 
         function renderStations() {
@@ -769,7 +840,24 @@
                 "active-rental.html";
         }
 
-        function handleNewRental() {
+        function handleNewRental(event) {
+
+            event.preventDefault();
+
+            const pendingPayment =
+                localStorage.getItem("pendingPayment");
+
+            if (pendingPayment) {
+
+                alert(
+                    "Please complete your payment first"
+                );
+
+                window.location.href =
+                    "payment.html";
+
+                return;
+            }
 
             const activeRental =
                 localStorage.getItem("activeRental");
@@ -788,6 +876,45 @@
 
             window.location.href =
                 "rental.html";
+        }
+
+        function checkPendingPayment() {
+
+            const pendingPayment =
+                localStorage.getItem("pendingPayment");
+
+            if (pendingPayment) {
+
+                document.getElementById(
+                    "pendingPaymentCard"
+                ).style.display = "block";
+            }
+            }
+
+            function goToPayment() {
+
+            window.location.href =
+                "payment.html";
+        }
+
+        function handleTopUp(event) {
+
+            event.preventDefault();
+
+            const pendingPayment =
+                localStorage.getItem("pendingPayment");
+
+            if (!pendingPayment) {
+
+                alert(
+                    "No pending payment"
+                );
+
+                return;
+            }
+
+            window.location.href =
+                "payment.html";
         }
     </script>
 </body>
